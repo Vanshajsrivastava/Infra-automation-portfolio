@@ -93,12 +93,5 @@ instance_public_ip = "13.45.23.78"
 * How to expose an EC2 instance to the internet
 * How to structure Terraform projects in a clean, professional way
 
-## Next Steps (Optional Advanced Additions)
-
-* Add a **security group** to allow SSH or HTTP
-* Use **user\_data** to install software on EC2
-* Break into **modules** for cleaner reuse
-* Use **Terraform Cloud** or remote backends
-
 End of README
 
