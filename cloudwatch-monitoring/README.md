@@ -1,5 +1,3 @@
-# CloudWatch Monitoring
-
 
 # AWS CloudWatch Monitoring & Alerting with Terraform
 
