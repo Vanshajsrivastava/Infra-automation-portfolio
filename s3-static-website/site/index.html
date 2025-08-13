@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vanshaj • Cloud & DevOps</title>
+  <meta name="description" content="Portfolio website for Cloud & DevOps projects, built as a static site ready for S3 hosting.">
+  <meta property="og:title" content="Vanshaj • Cloud & DevOps">
+  <meta property="og:description" content="Clean, fast static site ready for AWS S3 + CloudFront.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg">
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="script.js"></script>
+</head>
+<body class="theme-auto">
+  <header class="site-header">
+    <a class="brand" href="#"><span class="logo" aria-hidden="true">▲</span> Vanshaj</a>
+    <nav id="nav" class="nav">
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#about">About</a>
+      <a href="#contact" class="cta">Contact</a>
+    </nav>
+    <button class="menu-btn" aria-label="Menu" aria-controls="nav" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-inner">
+        <p class="eyebrow">Cloud • DevOps • Automation</p>
+        <h1>Deploy fast. Scale safely.</h1>
+        <p class="lead">I build cloud-native infrastructure with Terraform, automate with Bash & GitHub Actions, and ship static sites on S3 + CloudFront.</p>
+        <div class="actions">
+          <a href="#projects" class="button">View Projects</a>
+          <a href="#contact" class="button ghost">Get in touch</a>
+          <button id="themeToggle" class="button icon" title="Toggle theme" aria-label="Toggle theme">🌓</button>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 600 300" role="img" aria-label="decorative gradient">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stop-color="var(--accent)"/>
+              <stop offset="100%" stop-color="var(--accent2)"/>
+            </linearGradient>
+          </defs>
+          <circle cx="120" cy="80" r="80" fill="url(#g)" opacity="0.25"/>
+          <circle cx="320" cy="220" r="120" fill="url(#g)" opacity="0.25"/>
+          <circle cx="520" cy="100" r="60" fill="url(#g)" opacity="0.25"/>
+        </svg>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <h2>Featured Projects</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>S3 Static Website Hosting</h3>
+          <p>Static portfolio hosted on Amazon S3 with CloudFront and OAC. Deployed via Terraform and GitHub Actions.</p>
+          <ul class="meta">
+            <li>Terraform</li><li>S3</li><li>CloudFront</li>
+          </ul>
+          <a class="more" href="#" aria-label="S3 Project details">Details →</a>
+        </article>
+        <article class="card">
+          <h3>Linux Automation Scripts</h3>
+          <p>update-system.sh, s3-backup.sh, and log-cleanup.sh to automate server hygiene with logging & alerts.</p>
+          <ul class="meta">
+            <li>Bash</li><li>cron</li><li>AWS CLI</li>
+          </ul>
+          <a class="more" href="#" aria-label="Automation Project details">Details →</a>
+        </article>
+        <article class="card">
+          <h3>Terraform VPC Module</h3>
+          <p>Reusable VPC module with public/private subnets, NAT, IGW, and opinionated routing for workloads.</p>
+          <ul class="meta">
+            <li>Terraform</li><li>AWS</li><li>Modules</li>
+          </ul>
+          <a class="more" href="#" aria-label="VPC Project details">Details →</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <h2>Skills</h2>
+      <ul class="chips">
+        <li>Terraform</li><li>AWS (S3, EC2, IAM, CloudFront)</li><li>Linux</li><li>Bash</li><li>GitHub Actions</li><li>Docker</li>
+      </ul>
+    </section>
+
+    <section id="about" class="section">
+      <h2>About</h2>
+      <p>I’m a Cloud/DevOps engineer focused on simple, reliable infrastructure. I like minimal blast radius changes, fast rollouts, and readable IaC.</p>
+    </section>
+
+    <section id="contact" class="section">
+      <h2>Contact</h2>
+      <p>Want to collaborate or have a role in mind?</p>
+      <p>
+        <a class="button" href="mailto:hello@example.com">Email me</a>
+        <a class="button ghost" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        <a class="button ghost" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> Vanshaj • Built for S3 + CloudFront</p>
+  </footer>
+</body>
+</html>
