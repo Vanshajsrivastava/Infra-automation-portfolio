@@ -6,14 +6,14 @@ resource "aws_vpc" "mon" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
-  tags = { Name = "cw-mon-vpc" }
+  tags                 = { Name = "cw-mon-vpc" }
 }
 
 resource "aws_subnet" "mon_public" {
   vpc_id                  = aws_vpc.mon.id
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  tags = { Name = "cw-mon-public-subnet" }
+  tags                    = { Name = "cw-mon-public-subnet" }
 }
 
 resource "aws_internet_gateway" "mon" {
@@ -138,24 +138,24 @@ resource "aws_cloudwatch_dashboard" "ec2_dash" {
   dashboard_body = jsonencode({
     widgets = [
       {
-        "type": "metric", "x": 0, "y": 0, "width": 12, "height": 6,
-        "properties": {
-          "metrics": [
-            [ "AWS/EC2", "CPUUtilization", "InstanceId", aws_instance.monitor_demo.id ]
+        "type" : "metric", "x" : 0, "y" : 0, "width" : 12, "height" : 6,
+        "properties" : {
+          "metrics" : [
+            ["AWS/EC2", "CPUUtilization", "InstanceId", aws_instance.monitor_demo.id]
           ],
-          "period": 60, "stat": "Average",
-          "region": var.aws_region, "title": "CPU Utilization"
+          "period" : 60, "stat" : "Average",
+          "region" : var.aws_region, "title" : "CPU Utilization"
         }
       },
       {
-        "type": "metric", "x": 0, "y": 6, "width": 12, "height": 6,
-        "properties": {
-          "metrics": [
-            [ "AWS/EC2", "NetworkIn", "InstanceId", aws_instance.monitor_demo.id ],
-            [ "AWS/EC2", "NetworkOut", "InstanceId", aws_instance.monitor_demo.id ]
+        "type" : "metric", "x" : 0, "y" : 6, "width" : 12, "height" : 6,
+        "properties" : {
+          "metrics" : [
+            ["AWS/EC2", "NetworkIn", "InstanceId", aws_instance.monitor_demo.id],
+            ["AWS/EC2", "NetworkOut", "InstanceId", aws_instance.monitor_demo.id]
           ],
-          "period": 60, "stat": "Sum",
-          "region": var.aws_region, "title": "Network In/Out"
+          "period" : 60, "stat" : "Sum",
+          "region" : var.aws_region, "title" : "Network In/Out"
         }
       }
     ]
