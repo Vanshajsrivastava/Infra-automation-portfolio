@@ -1,5 +1,13 @@
 terraform {
   required_version = ">= 1.6.0"
+
+  backend "remote" {
+    organization = "Vanshaj-cloud"
+    workspaces {
+      name = "s3-static-website"
+    }
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -7,6 +15,7 @@ terraform {
     }
   }
 }
+
 
 provider "aws" {
   region = var.region
