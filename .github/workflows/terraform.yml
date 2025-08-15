@@ -46,8 +46,7 @@ jobs:
       - run: terraform fmt -check
       - run: terraform init
       - run: terraform validate
-      - run: terraform plan -no-color -var="bucket_name=${{ env.BUCKET_NAME }}"
-
+      - run: terraform plan -no-color
   apply:
     name: Apply (main)
     runs-on: ubuntu-latest
@@ -70,7 +69,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - run: terraform init
-      - run: terraform apply -auto-approve -var="bucket_name=${{ env.BUCKET_NAME }}"
+      - run: terraform apply -auto-approve
 
       # Print outputs for easy debugging
       - name: Show Terraform outputs
