@@ -5,32 +5,44 @@ on:
     branches: [ main ]
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 env:
   TF_VERSION: 1.6.6
   AWS_REGION: eu-west-2
   BUCKET_NAME: my-portfolio-site-vanshaj-2025
 
+# All terraform cmds run inside your TF project folder
 defaults:
   run:
     working-directory: s3-static-website
+
+# Prevent concurrent runs on same ref
+concurrency:
+  group: terraform-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   plan:
     name: Plan (PR)
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
     steps:
       - uses: actions/checkout@v4
+
+      # Terraform Cloud auth (needs repo secret TF_API_TOKEN)
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      # AWS auth via static keys (needs repo secrets AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
       - run: terraform fmt -check
       - run: terraform init
       - run: terraform validate
@@ -39,24 +51,40 @@ jobs:
   apply:
     name: Apply (main)
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch' }}
     permissions:
       id-token: write
       contents: read
     steps:
       - uses: actions/checkout@v4
+
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
       - run: terraform init
       - run: terraform apply -auto-approve -var="bucket_name=${{ env.BUCKET_NAME }}"
+
+      # Print outputs for easy debugging
+      - name: Show Terraform outputs
+        run: terraform output
+
+      # Safe CloudFront invalidation (skips if output missing)
       - name: Invalidate CloudFront cache
+        shell: bash
         run: |
-          DIST_ID=$(terraform output -raw cloudfront_distribution_id)
-          aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+          set -e
+          if terraform output -raw cloudfront_distribution_id >/dev/null 2>&1; then
+            DIST_ID=$(terraform output -raw cloudfront_distribution_id)
+            echo "Invalidating CloudFront distribution: $DIST_ID"
+            aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+          else
+            echo "No 'cloudfront_distribution_id' output found; skipping invalidation."
+          fi
