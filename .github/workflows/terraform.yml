@@ -11,7 +11,6 @@ env:
   AWS_REGION: eu-west-2
   BUCKET_NAME: my-portfolio-site-vanshaj-2025
 
-# Run all steps inside your Terraform project folder
 defaults:
   run:
     working-directory: s3-static-website
@@ -23,29 +22,15 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      # A) Static keys (quick start)
-      - name: Configure AWS (static keys)
-        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != '' }}
-        uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-
-      # B) OIDC role (keyless)
-      - name: Configure AWS (OIDC)
-        if: ${{ secrets.AWS_ROLE_ARN != '' && (secrets.AWS_ACCESS_KEY_ID == '' || secrets.AWS_SECRET_ACCESS_KEY == '') }}
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-
       - run: terraform fmt -check
       - run: terraform init
       - run: terraform validate
@@ -60,30 +45,17 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Configure AWS (static keys)
-        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' && secrets.AWS_SECRET_ACCESS_KEY != '' }}
-        uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-
-      - name: Configure AWS (OIDC)
-        if: ${{ secrets.AWS_ROLE_ARN != '' && (secrets.AWS_ACCESS_KEY_ID == '' || secrets.AWS_SECRET_ACCESS_KEY == '') }}
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-
       - run: terraform init
       - run: terraform apply -auto-approve -var="bucket_name=${{ env.BUCKET_NAME }}"
-
       - name: Invalidate CloudFront cache
         run: |
           DIST_ID=$(terraform output -raw cloudfront_distribution_id)
