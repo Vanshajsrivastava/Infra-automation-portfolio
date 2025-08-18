@@ -104,4 +104,3 @@ By completing this project, you will demonstrate:
 
 ---
 
-If you want, I can also **add a diagram** of the architecture to make this README visually stronger for your portfolio. That would help recruiters instantly understand your setup.
